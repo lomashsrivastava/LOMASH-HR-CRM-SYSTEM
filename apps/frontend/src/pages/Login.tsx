@@ -5,6 +5,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SparklesIcon, CheckCircleIcon, ExclamationTriangleIcon, CubeTransparentIcon, CpuChipIcon, BuildingOffice2Icon, UsersIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import SplashCursor from '../components/SplashCursor';
+import { getApiUrl } from '../config';
 
 // === NEW: Laser Beams Component (Pure CSS, Low Cost) ===
 const LaserBeams = () => (
@@ -64,13 +65,8 @@ const Login = () => {
                 : { name, email: email.toLowerCase(), password, orgName };
 
             // Explicitly logging URL for debugging
-            const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:4000/api/v1';
-            // Remove /api/v1 from endpoint if it's already in baseUrl to avoid duplication
-            // Logic: If env var has /api/v1, we should be careful. 
-            // Better approach: ensure baseUrl is strictly the root API url.
-            // In README we set VITE_API_URL to .../api/v1. So endpoint should just be /auth/login
-
-            const fullUrl = `${baseUrl}${endpoint.replace('/api/v1', '')}`;
+            // Use the robust URL helper
+            const fullUrl = getApiUrl(endpoint);
 
             console.log(`Attempting connection to: ${fullUrl}`);
 
