@@ -1,8 +1,8 @@
 
 // Helper to construct the API URL correctly
 export const getApiUrl = (endpoint: string) => {
-    // 1. Get Base URL from Env or Default
-    let baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:4000/api/v1';
+    // 1. Get Base URL from Env or Default to PROD
+    let baseUrl = import.meta.env.VITE_API_URL || 'https://lomash-backend.onrender.com/api/v1';
 
     // 2. Remove trailing slash from base if present
     if (baseUrl.endsWith('/')) {
