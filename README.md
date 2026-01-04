@@ -69,7 +69,7 @@ The Node.js backend requires a process manager.
 ## 👨‍💻 Author
 **Lomash Srivastava**
 - **GitHub**: [lomashsrivastava](https://github.com/lomashsrivastava)
-- **Portfolio**: [lomash-portfolio.netlify.app](https://lomash-portfolio.netlify.app)
+- **Portfolio**: [lomash-portfolio.netlify.app](https://lomash.netlify.app)
 
 ---
 *Created with ❤️ by Lomash Srivastava*
