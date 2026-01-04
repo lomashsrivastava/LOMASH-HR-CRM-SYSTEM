@@ -64,9 +64,17 @@ const Login = () => {
                 : { name, email: email.toLowerCase(), password, orgName };
 
             // Explicitly logging URL for debugging
-            console.log(`Attempting connection to: http://127.0.0.1:4000${endpoint}`);
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:4000/api/v1';
+            // Remove /api/v1 from endpoint if it's already in baseUrl to avoid duplication
+            // Logic: If env var has /api/v1, we should be careful. 
+            // Better approach: ensure baseUrl is strictly the root API url.
+            // In README we set VITE_API_URL to .../api/v1. So endpoint should just be /auth/login
 
-            const { data } = await axios.post(`http://127.0.0.1:4000${endpoint}`, payload);
+            const fullUrl = `${baseUrl}${endpoint.replace('/api/v1', '')}`;
+
+            console.log(`Attempting connection to: ${fullUrl}`);
+
+            const { data } = await axios.post(fullUrl, payload);
 
             if (isLogin) {
                 login(data.token, data);

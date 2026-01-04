@@ -6,7 +6,7 @@ const useAxios = () => {
     const { token } = useAuth();
 
     const api = axios.create({
-        baseURL: 'http://127.0.0.1:4000/api/v1',
+        baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:4000/api/v1',
     });
 
     api.interceptors.request.use(
