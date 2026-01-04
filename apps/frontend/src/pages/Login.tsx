@@ -83,6 +83,20 @@ const Login = () => {
             }
         } catch (err: any) {
             console.error('Login error:', err);
+
+            // Debugging Aid
+            const errorDetails = {
+                message: err.message,
+                code: err.code,
+                response: err.response ? {
+                    status: err.response.status,
+                    data: err.response.data
+                } : 'No Response',
+                configUrl: err.config?.url
+            };
+
+            alert(`Debug Error:\n${JSON.stringify(errorDetails, null, 2)}`);
+
             const msg = err.response?.data?.message
                 || err.message
                 || 'Server unreachable. Please ensure the backend is active at port 4000.';
