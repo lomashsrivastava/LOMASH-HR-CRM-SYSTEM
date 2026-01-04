@@ -1,5 +1,8 @@
 # LOMASH HR CRM SYSTEM
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=netlify)](https://lomashhrcrm.netlify.app)
+**Live Site:** [https://lomashhrcrm.netlify.app](https://lomashhrcrm.netlify.app)
+
 ## 🚀 Overview
 **Lomash HR CRM System** is a comprehensive, AI-powered Human Resource Management platform designed to streamline the entire recruitment and employee management lifecycle. Built with a modern tech stack, it integrates specific AI capabilities for resume parsing and candidate analysis.
 
