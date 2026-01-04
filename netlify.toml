@@ -1,4 +1,5 @@
 [build]
+  # Force Re-deploy 2026
   base = "apps/frontend"
   command = "npm run build"
   publish = "dist"
