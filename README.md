@@ -48,10 +48,11 @@ The frontend is configured for deployment on Netlify.
 2. Set Build Command: `npm run build`
 3. Set Publish Directory: `dist`
 4. **Environment Variables**:
-   - `VITE_API_URL`: URL of your deployed Backend.
-   - `VITE_ML_API_URL`: URL of your deployed ML Service.
+   - `VITE_API_URL`: `https://lomash-backend.onrender.com/api/v1`
+   - `VITE_ML_API_URL`: `https://lomash-hr-crm-system-ml-service.onrender.com`
 
 ### Backend (Render/Railway)
+**Live URL**: [https://lomash-backend.onrender.com](https://lomash-backend.onrender.com)
 The Node.js backend requires a process manager.
 1. Connect `apps/backend` to Render/Railway.
 2. Build Command: `npm install && npm run build`
@@ -62,6 +63,7 @@ The Node.js backend requires a process manager.
    - `PORT`: (Auto-assigned by platform).
 
 ### ML Service (Render/Railway)
+**Live URL**: [https://lomash-hr-crm-system-ml-service.onrender.com](https://lomash-hr-crm-system-ml-service.onrender.com)
 1. Connect `apps/ml-service`.
 2. Build Command: `pip install -r requirements.txt`
 3. Start Command: `gunicorn core.wsgi:application`
