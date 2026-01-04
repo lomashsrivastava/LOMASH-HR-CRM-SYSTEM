@@ -15,12 +15,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({
-    origin: true, // Allow any origin
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+app.use(cors()); // Allow All Origins
+app.options('*', cors()); // Enable Pre-Flight for all routes
+
 app.use(helmet({
     crossOriginResourcePolicy: false,
 }));
