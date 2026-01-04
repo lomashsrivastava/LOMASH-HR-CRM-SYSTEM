@@ -8,5 +8,9 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true
-    }
+    },
+    "exclude": [
+        "scripts",
+        "**/*.test.ts"
+    ]
 }
