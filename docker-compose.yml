@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # Core Backend (Node.js/Express)
+  # ---------------------------------------------------------------------------
+  backend:
+    build: 
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: hrcrm-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - MONGO_URI=mongodb://mongo:27017/HRCRM
+      - REDIS_URL=redis://redis:6379
+      - ML_SERVICE_URL=http://ml-service:8000
+      - JWT_SECRET=dev_secret_key_123
+      - JWT_EXPIRES=1d
+      - NODE_ENV=development
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - hrcrm-network
+    command: npm run dev
+
+  # ---------------------------------------------------------------------------
+  # AI/ML Microservice (Django/Python)
+  # ---------------------------------------------------------------------------
+  ml-service:
+    build:
+      context: ./apps/ml-service
+      dockerfile: Dockerfile
+    container_name: hrcrm-ml-service
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=core.settings
+    volumes:
+      - ./apps/ml-service:/app
+    networks:
+      - hrcrm-network
+    command: python manage.py runserver 0.0.0.0:8000
+
+  # ---------------------------------------------------------------------------
+  # Frontend (React/Vite)
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: hrcrm-frontend
+    ports:
+      - "3000:5173"
+    environment:
+      - VITE_API_URL=http://localhost:4000/api/v1
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+    networks:
+      - hrcrm-network
+    command: npm run dev -- --host
+
+  # ---------------------------------------------------------------------------
+  # Database (MongoDB)
+  # ---------------------------------------------------------------------------
+  mongo:
+    image: mongo:6.0
+    container_name: hrcrm-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - hrcrm-network
+
+  # ---------------------------------------------------------------------------
+  # Cache & Queues (Redis)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:alpine
+    container_name: hrcrm-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - hrcrm-network
+
+networks:
+  hrcrm-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
