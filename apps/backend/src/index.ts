@@ -57,14 +57,27 @@ app.use((err: any, req: any, res: any, next: any) => {
 });
 
 // Health Check
+app.get('/health', (req, res) => {
+    const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
+    res.json({
+        status: 'UP',
+        database: dbStatus,
+        timestamp: new Date().toISOString()
+    });
+});
+
 app.get('/', (req, res) => {
-    res.send('HR CRM Backend Running');
+    res.send('HR CRM Backend Running. Use /health for system status.');
 });
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/HRCRM';
 
-mongoose.connect(MONGO_URI)
+mongoose.set('bufferCommands', false); // Fail fast instead of hanging for 10s
+
+mongoose.connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+})
     .then(() => {
         const maskedUri = MONGO_URI.replace(/\/\/.*@/, "//***:***@");
         console.log(`[Database] MongoDB Connected Successfully to: ${maskedUri}`);
