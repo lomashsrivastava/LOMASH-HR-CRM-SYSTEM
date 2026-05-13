@@ -49,6 +49,7 @@ const Offers = () => {
         if (token) fetchOffers();
     }, [token]);
 
+    const fetchOffers = async () => {
         try {
             const [offerRes, candRes] = await Promise.all([
                 axios.get(getApiUrl('/offers'), { headers: { Authorization: `Bearer ${token}` } }),

@@ -70,6 +70,7 @@ const Settings = () => {
         }
     };
 
+    const handleSave = async () => {
         setSaveStatus({ type: '', message: '' }); // Clear previous status
         try {
             // Save organization name
