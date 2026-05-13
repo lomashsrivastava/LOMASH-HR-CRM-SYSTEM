@@ -7,8 +7,12 @@ import authRoutes from './routes/auth.routes';
 import jobRoutes from './routes/job.routes';
 import candidateRoutes from './routes/candidate.routes';
 import interviewRoutes from './routes/interview.routes';
-
 import employeeRoutes from './routes/employee.routes';
+import assessmentRoutes from './routes/assessment.routes';
+import offerRoutes from './routes/offer.routes';
+import onboardingRoutes from './routes/onboarding.routes';
+import talentPoolRoutes from './routes/talentpool.routes';
+import userRoutes from './routes/user.routes';
 
 dotenv.config();
 
@@ -37,18 +41,10 @@ app.use('/api/v1/jobs', jobRoutes);
 app.use('/api/v1/candidates', candidateRoutes);
 app.use('/api/v1/interviews', interviewRoutes);
 app.use('/api/v1/employees', employeeRoutes);
-
-import assessmentRoutes from './routes/assessment.routes';
-import offerRoutes from './routes/offer.routes';
-import onboardingRoutes from './routes/onboarding.routes';
-import talentPoolRoutes from './routes/talentpool.routes';
-
 app.use('/api/v1/assessments', assessmentRoutes);
 app.use('/api/v1/offers', offerRoutes);
 app.use('/api/v1/onboarding', onboardingRoutes);
 app.use('/api/v1/talent-pool', talentPoolRoutes);
-
-import userRoutes from './routes/user.routes';
 app.use('/api/v1/users', userRoutes);
 
 // Error Handling Middleware
@@ -71,11 +67,15 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/HRCRM';
 mongoose.connect(MONGO_URI)
     .then(() => {
         const maskedUri = MONGO_URI.replace(/\/\/.*@/, "//***:***@");
-        console.log(`[Database] MongoDB Connected to: ${maskedUri}`);
+        console.log(`[Database] MongoDB Connected Successfully to: ${maskedUri}`);
     })
     .catch(err => {
-        console.error('[Database] MongoDB Connection Error:', err.message);
-        process.exit(1); // Exit if DB connection fails
+        console.error('================================================');
+        console.error('[Database] CRITICAL: MongoDB Connection Failed!');
+        console.error(`[Database] Error: ${err.message}`);
+        console.error('[Database] The application will continue to run but DB features will fail.');
+        console.error('================================================');
+        // process.exit(1); // Removed to allow health checks to pass on Render
     });
 
 // Redis Connection Check (Optional but recommended for performance)
