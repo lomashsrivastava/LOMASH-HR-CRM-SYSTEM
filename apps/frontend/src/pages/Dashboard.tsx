@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { BriefcaseIcon, UserGroupIcon, CalendarIcon, UsersIcon, ClockIcon, CurrencyDollarIcon, CheckCircleIcon, ArrowTrendingUpIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { getApiUrl } from '../config';
 
 const Dashboard = () => {
     const { token } = useAuth();
@@ -24,10 +25,10 @@ const Dashboard = () => {
             const fetchData = async () => {
                 try {
                     const [resCand, resJobs, resInt, resEmp] = await Promise.all([
-                        axios.get('http://127.0.0.1:4000/api/v1/candidates', { headers: { Authorization: `Bearer ${token}` } }),
-                        axios.get('http://127.0.0.1:4000/api/v1/jobs', { headers: { Authorization: `Bearer ${token}` } }),
-                        axios.get('http://127.0.0.1:4000/api/v1/interviews', { headers: { Authorization: `Bearer ${token}` } }),
-                        axios.get('http://127.0.0.1:4000/api/v1/employees', { headers: { Authorization: `Bearer ${token}` } })
+                        axios.get(getApiUrl('/candidates'), { headers: { Authorization: `Bearer ${token}` } }),
+                        axios.get(getApiUrl('/jobs'), { headers: { Authorization: `Bearer ${token}` } }),
+                        axios.get(getApiUrl('/interviews'), { headers: { Authorization: `Bearer ${token}` } }),
+                        axios.get(getApiUrl('/employees'), { headers: { Authorization: `Bearer ${token}` } })
                     ]);
 
                     // DEMO DATA FALLBACK if backend returns empty

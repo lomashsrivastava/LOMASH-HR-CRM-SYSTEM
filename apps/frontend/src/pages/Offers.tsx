@@ -7,6 +7,7 @@ import {
     ArrowDownTrayIcon, PrinterIcon, EllipsisHorizontalIcon, ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getApiUrl } from '../config';
 
 interface Offer {
     _id: string;
@@ -48,11 +49,10 @@ const Offers = () => {
         if (token) fetchOffers();
     }, [token]);
 
-    const fetchOffers = async () => {
         try {
             const [offerRes, candRes] = await Promise.all([
-                axios.get('http://localhost:4000/api/v1/offers', { headers: { Authorization: `Bearer ${token}` } }),
-                axios.get('http://localhost:4000/api/v1/candidates', { headers: { Authorization: `Bearer ${token}` } })
+                axios.get(getApiUrl('/offers'), { headers: { Authorization: `Bearer ${token}` } }),
+                axios.get(getApiUrl('/candidates'), { headers: { Authorization: `Bearer ${token}` } })
             ]);
             setOffers(offerRes.data);
             setCandidates(candRes.data);
@@ -67,11 +67,11 @@ const Offers = () => {
         e.preventDefault();
         try {
             if (selectedOffer?._id) {
-                await axios.put(`http://localhost:4000/api/v1/offers/${selectedOffer._id}`, formData, {
+                await axios.put(getApiUrl(`/offers/${selectedOffer._id}`), formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:4000/api/v1/offers', formData, {
+                await axios.post(getApiUrl('/offers'), formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -87,7 +87,7 @@ const Offers = () => {
     const handleDelete = async () => {
         if (!deleteConfirmId) return;
         try {
-            await axios.delete(`http://localhost:4000/api/v1/offers/${deleteConfirmId}`, {
+            await axios.delete(getApiUrl(`/offers/${deleteConfirmId}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setOffers(prev => prev.filter(o => o._id !== deleteConfirmId));
@@ -101,7 +101,7 @@ const Offers = () => {
     const handleSendOffer = async (offer: Offer) => {
         if (!confirm(`Send official offer letter to ${offer.candidateId?.name}?`)) return;
         try {
-            await axios.post(`http://localhost:4000/api/v1/offers/${offer._id}/send`, {}, {
+            await axios.post(getApiUrl(`/offers/${offer._id}/send`), {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchOffers();

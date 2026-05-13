@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { XMarkIcon, PaperClipIcon, CalendarIcon, ChatBubbleLeftIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getApiUrl } from '../config';
 
 interface CandidateDetailsProps {
     candidateId: string;
@@ -21,7 +22,7 @@ const CandidateDetails = ({ candidateId, onClose }: CandidateDetailsProps) => {
 
     const fetchCandidate = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:4000/api/v1/candidates/${candidateId}`, {
+            const { data } = await axios.get(getApiUrl(`/candidates/${candidateId}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setCandidate(data);

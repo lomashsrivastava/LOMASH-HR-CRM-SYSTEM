@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import CandidateDetails from './CandidateDetails';
+import { getApiUrl } from '../config';
 
 interface Candidate {
     _id: string;
@@ -65,7 +66,7 @@ const Candidates = () => {
 
     const fetchCandidates = async () => {
         try {
-            const { data } = await axios.get('http://localhost:4000/api/v1/candidates', {
+            const { data } = await axios.get(getApiUrl('/candidates'), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setCandidates(data);
@@ -103,7 +104,7 @@ const Candidates = () => {
 
         try {
             setUploading(true);
-            await axios.post('http://localhost:4000/api/v1/candidates/upload', uploadData, {
+            await axios.post(getApiUrl('/candidates/upload'), uploadData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`
@@ -134,11 +135,11 @@ const Candidates = () => {
 
         try {
             if (formData._id) {
-                await axios.put(`http://localhost:4000/api/v1/candidates/${formData._id}`, payload, {
+                await axios.put(getApiUrl(`/candidates/${formData._id}`), payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:4000/api/v1/candidates', payload, {
+                await axios.post(getApiUrl('/candidates'), payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -156,7 +157,7 @@ const Candidates = () => {
         try {
             // Optimistic update
             setCandidates(prev => prev.map(c => c._id === candidate._id ? { ...c, priority: !c.priority } : c));
-            await axios.put(`http://localhost:4000/api/v1/candidates/${candidate._id}`, { priority: !candidate.priority }, {
+            await axios.put(getApiUrl(`/candidates/${candidate._id}`), { priority: !candidate.priority }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchCandidates(); // Sync
@@ -172,7 +173,7 @@ const Candidates = () => {
             setCandidates(prev => prev.map(c => c._id === id ? { ...c, stage: status } : c));
             setActiveMenuId(null);
 
-            await axios.put(`http://localhost:4000/api/v1/candidates/${id}/stage`, { stage: status }, {
+            await axios.put(getApiUrl(`/candidates/${id}/stage`), { stage: status }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
         } catch (error) {
@@ -203,7 +204,7 @@ const Candidates = () => {
     const confirmDeleteCandidate = async () => {
         if (!confirmDeleteId) return;
         try {
-            await axios.delete(`http://localhost:4000/api/v1/candidates/${confirmDeleteId}`, {
+            await axios.delete(getApiUrl(`/candidates/${confirmDeleteId}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setCandidates(prev => prev.filter(c => c._id !== confirmDeleteId));
@@ -235,7 +236,7 @@ const Candidates = () => {
         setCandidates(updatedCandidates);
 
         try {
-            await axios.put(`http://localhost:4000/api/v1/candidates/${draggableId}/stage`, { stage: newStage }, {
+            await axios.put(getApiUrl(`/candidates/${draggableId}/stage`), { stage: newStage }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
         } catch (error) {
@@ -255,7 +256,7 @@ const Candidates = () => {
     const handleBulkDelete = async () => {
         try {
             // Using a loop for now (simulating bulk op, ideally backend needs a bulk endpoint)
-            const promises = selectedIds.map(id => axios.delete(`http://localhost:4000/api/v1/candidates/${id}`, { headers: { Authorization: `Bearer ${token}` } }));
+            const promises = selectedIds.map(id => axios.delete(getApiUrl(`/candidates/${id}`), { headers: { Authorization: `Bearer ${token}` } }));
             await Promise.all(promises);
 
             setCandidates(prev => prev.filter(c => !selectedIds.includes(c._id)));

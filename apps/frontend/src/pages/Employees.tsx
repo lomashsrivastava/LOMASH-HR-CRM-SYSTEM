@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { getApiUrl } from '../config';
 import {
     PlusIcon, XMarkIcon, MagnifyingGlassIcon, UserGroupIcon, BriefcaseIcon, ClockIcon,
     CheckCircleIcon, TrashIcon, ArrowDownTrayIcon, ArrowUpTrayIcon, EllipsisHorizontalIcon,
@@ -74,7 +75,7 @@ const Employees = () => {
 
     const fetchEmployees = async () => {
         try {
-            const { data } = await axios.get('http://localhost:4000/api/v1/employees', {
+            const { data } = await axios.get(getApiUrl('/employees'), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setEmployees(data);
@@ -91,11 +92,11 @@ const Employees = () => {
         e.preventDefault();
         try {
             if (formData._id) {
-                await axios.put(`http://localhost:4000/api/v1/employees/${formData._id}`, formData, {
+                await axios.put(getApiUrl(`/employees/${formData._id}`), formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:4000/api/v1/employees', formData, {
+                await axios.post(getApiUrl('/employees'), formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -110,7 +111,7 @@ const Employees = () => {
     const handleDelete = async () => {
         if (!deleteConfirmId) return;
         try {
-            await axios.delete(`http://localhost:4000/api/v1/employees/${deleteConfirmId}`, {
+            await axios.delete(getApiUrl(`/employees/${deleteConfirmId}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setEmployees(prev => prev.filter(e => e._id !== deleteConfirmId));
@@ -122,7 +123,7 @@ const Employees = () => {
 
     const handleBulkDelete = async () => {
         try {
-            const promises = selectedIds.map(id => axios.delete(`http://localhost:4000/api/v1/employees/${id}`, {
+            const promises = selectedIds.map(id => axios.delete(getApiUrl(`/employees/${id}`), {
                 headers: { Authorization: `Bearer ${token}` }
             }));
             await Promise.all(promises);
@@ -190,7 +191,7 @@ const Employees = () => {
 
             if (newEmployees.length > 0) {
                 try {
-                    await axios.post('http://localhost:4000/api/v1/employees/bulk-upload', newEmployees, {
+                    await axios.post(getApiUrl('/employees/bulk-upload'), newEmployees, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     alert(`Successfully imported ${newEmployees.length} employees!`);

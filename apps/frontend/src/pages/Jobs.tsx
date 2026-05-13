@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { BriefcaseIcon, MapPinIcon, CurrencyDollarIcon, PlusIcon, XMarkIcon, CalendarIcon, TagIcon, TrashIcon, PencilSquareIcon, DocumentDuplicateIcon, ShareIcon, EllipsisHorizontalIcon, MagnifyingGlassIcon, BuildingOffice2Icon, AcademicCapIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getApiUrl } from '../config';
 
 interface Job {
     _id: string;
@@ -67,7 +68,7 @@ const Jobs = () => {
 
     const fetchJobs = async () => {
         try {
-            const { data } = await axios.get('http://localhost:4000/api/v1/jobs', {
+            const { data } = await axios.get(getApiUrl('/jobs'), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setJobs(data);
@@ -90,11 +91,11 @@ const Jobs = () => {
             };
 
             if (editingId) {
-                await axios.put(`http://localhost:4000/api/v1/jobs/${editingId}`, payload, {
+                await axios.put(getApiUrl(`/jobs/${editingId}`), payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:4000/api/v1/jobs', payload, {
+                await axios.post(getApiUrl('/jobs'), payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -118,7 +119,7 @@ const Jobs = () => {
     const confirmDeleteJob = async () => {
         if (!confirmDeleteId) return;
         try {
-            await axios.delete(`http://localhost:4000/api/v1/jobs/${confirmDeleteId}`, {
+            await axios.delete(getApiUrl(`/jobs/${confirmDeleteId}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setJobs(prev => prev.filter(j => j._id !== confirmDeleteId));

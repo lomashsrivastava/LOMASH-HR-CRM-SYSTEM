@@ -7,6 +7,7 @@ import {
     ArrowPathIcon, CodeBracketIcon
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getApiUrl } from '../config';
 
 // Types
 interface Question {
@@ -53,7 +54,7 @@ const Assessments = () => {
     const fetchAssessments = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:4000/api/v1/assessments', {
+            const { data } = await axios.get(getApiUrl('/assessments'), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setAssessments(data);
@@ -67,11 +68,11 @@ const Assessments = () => {
     const handleSaveAssessment = async () => {
         try {
             if (currentAssessment._id) {
-                await axios.put(`http://localhost:4000/api/v1/assessments/${currentAssessment._id}`, currentAssessment, {
+                await axios.put(getApiUrl(`/assessments/${currentAssessment._id}`), currentAssessment, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:4000/api/v1/assessments', currentAssessment, {
+                await axios.post(getApiUrl('/assessments'), currentAssessment, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -86,7 +87,7 @@ const Assessments = () => {
     const handleDelete = async (id: string) => {
         if (!confirm('Delete this assessment?')) return;
         try {
-            await axios.delete(`http://localhost:4000/api/v1/assessments/${id}`, {
+            await axios.delete(getApiUrl(`/assessments/${id}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setAssessments(prev => prev.filter(a => a._id !== id));

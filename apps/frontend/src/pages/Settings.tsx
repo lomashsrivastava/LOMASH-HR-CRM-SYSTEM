@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
+import { getApiUrl } from '../config';
 
 const Settings = () => {
     const { token, user, login } = useAuth();
@@ -15,7 +16,6 @@ const Settings = () => {
     const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'recruiter' });
     const [showAddUser, setShowAddUser] = useState(false);
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
 
     useEffect(() => {
         if (token) {
@@ -26,7 +26,7 @@ const Settings = () => {
 
     const fetchOrgProfile = async () => {
         try {
-            const { data } = await axios.get(`${API_URL}/users/organization`, {
+            const { data } = await axios.get(getApiUrl('/users/organization'), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // If data.name exists, use it. If not, default to user's email domain or empty.
@@ -44,7 +44,7 @@ const Settings = () => {
     const fetchUsers = async () => {
         try {
             setLoadingUsers(true);
-            const { data } = await axios.get(`${API_URL}/users`, {
+            const { data } = await axios.get(getApiUrl('/users'), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUsers(data);
@@ -58,7 +58,7 @@ const Settings = () => {
     const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axios.post(`${API_URL}/users`, newUser, {
+            await axios.post(getApiUrl('/users'), newUser, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('User added successfully!');
@@ -70,11 +70,10 @@ const Settings = () => {
         }
     };
 
-    const handleSave = async () => {
         setSaveStatus({ type: '', message: '' }); // Clear previous status
         try {
             // Save organization name
-            const { data } = await axios.put(`${API_URL}/users/organization`, { name: orgName }, {
+            const { data } = await axios.put(getApiUrl('/users/organization'), { name: orgName }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

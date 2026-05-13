@@ -26,16 +26,20 @@ export const uploadResume = [
             let parsedData: any = {};
             try {
                 const { data } = await axios.post(parseUrl, formData, {
-                    headers: { ...formData.getHeaders() }
+                    headers: { ...formData.getHeaders() },
+                    timeout: 30000 // 30s timeout for ML service
                 });
                 parsedData = data;
-            } catch (mlError) {
-                console.error('ML Service Error:', mlError);
+            } catch (mlError: any) {
+                console.error(`[ML Service] Error at ${parseUrl}:`, mlError.message);
                 // Continue without parsing if ML fails
+            } finally {
+                // Ensure file is deleted even if axios fails
+                if (req.file && fs.existsSync(req.file.path)) {
+                    fs.unlinkSync(req.file.path);
+                    console.log(`[File] Temporary file cleaned up: ${req.file.path}`);
+                }
             }
-
-            // Cleanup
-            fs.unlinkSync(req.file.path);
 
             // Create Candidate Entry
             const candidate = await Candidate.create({

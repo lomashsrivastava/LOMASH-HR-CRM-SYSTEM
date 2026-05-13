@@ -9,19 +9,16 @@ export const getApiUrl = (endpoint: string) => {
         baseUrl = baseUrl.slice(0, -1);
     }
 
-    // 3. Ensure Base URL ends with /api/v1
+    // 3. Ensure Base URL ends with /api/v1 if it doesn't already
     if (!baseUrl.includes('/api/v1')) {
         baseUrl = `${baseUrl}/api/v1`;
     }
 
-    // 4. Clean up endpoint (remove leading slash if present, to avoid double slashes)
-    // Actually, we want to ensure we append strictly what we need.
-    // If endpoint starts with /api/v1, strip it.
+    // 4. Clean up endpoint (remove leading slash if present)
     if (endpoint.startsWith('/api/v1')) {
         endpoint = endpoint.replace('/api/v1', '');
     }
 
-    // Ensure endpoint starts with slash
     if (!endpoint.startsWith('/')) {
         endpoint = `/${endpoint}`;
     }

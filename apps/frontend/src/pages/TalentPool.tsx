@@ -7,6 +7,7 @@ import {
     MapPinIcon, EnvelopeIcon, CheckBadgeIcon, ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getApiUrl } from '../config';
 
 interface Talent {
     _id: string;
@@ -72,7 +73,7 @@ const TalentPool = () => {
 
     const fetchTalents = async () => {
         try {
-            const { data } = await axios.get('http://localhost:4000/api/v1/talent-pool', {
+            const { data } = await axios.get(getApiUrl('/talent-pool'), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setTalents(data);
@@ -92,11 +93,11 @@ const TalentPool = () => {
             };
 
             if (formData._id) {
-                await axios.put(`http://localhost:4000/api/v1/talent-pool/${formData._id}`, payload, {
+                await axios.put(getApiUrl(`/talent-pool/${formData._id}`), payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post('http://localhost:4000/api/v1/talent-pool', payload, {
+                await axios.post(getApiUrl('/talent-pool'), payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
@@ -111,7 +112,7 @@ const TalentPool = () => {
     const handleDelete = async () => {
         if (!deleteConfirmId) return;
         try {
-            await axios.delete(`http://localhost:4000/api/v1/talent-pool/${deleteConfirmId}`, {
+            await axios.delete(getApiUrl(`/talent-pool/${deleteConfirmId}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setDeleteConfirmId(null);
@@ -124,7 +125,7 @@ const TalentPool = () => {
     const handleBulkDelete = async () => {
         if (!confirm(`Delete ${selectedIds.length} talents?`)) return;
         try {
-            const promises = selectedIds.map(id => axios.delete(`http://localhost:4000/api/v1/talent-pool/${id}`, {
+            const promises = selectedIds.map(id => axios.delete(getApiUrl(`/talent-pool/${id}`), {
                 headers: { Authorization: `Bearer ${token}` }
             }));
             await Promise.all(promises);
@@ -166,7 +167,7 @@ const TalentPool = () => {
             }
             if (newTalents.length > 0) {
                 try {
-                    await axios.post('http://localhost:4000/api/v1/talent-pool/bulk', newTalents, { headers: { Authorization: `Bearer ${token}` } });
+                    await axios.post(getApiUrl('/talent-pool/bulk'), newTalents, { headers: { Authorization: `Bearer ${token}` } });
                     fetchTalents();
                     alert(`Imported ${newTalents.length} candidates.`);
                 } catch (err) { console.error(err); alert('Import failed'); }

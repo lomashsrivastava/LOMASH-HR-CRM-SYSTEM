@@ -69,8 +69,22 @@ app.get('/', (req, res) => {
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/HRCRM';
 
 mongoose.connect(MONGO_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error('MongoDB Connection Error:', err));
+    .then(() => {
+        const maskedUri = MONGO_URI.replace(/\/\/.*@/, "//***:***@");
+        console.log(`[Database] MongoDB Connected to: ${maskedUri}`);
+    })
+    .catch(err => {
+        console.error('[Database] MongoDB Connection Error:', err.message);
+        process.exit(1); // Exit if DB connection fails
+    });
+
+// Redis Connection Check (Optional but recommended for performance)
+if (process.env.REDIS_URL) {
+    console.log('[Cache] Redis URL detected, attempting connection...');
+    // Add redis client logic here if needed
+} else {
+    console.warn('[Cache] No REDIS_URL found. Running without cache.');
+}
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

@@ -1,12 +1,12 @@
-
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { getApiUrl } from '../config';
 
 const useAxios = () => {
     const { token } = useAuth();
 
     const api = axios.create({
-        baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:4000/api/v1',
+        baseURL: getApiUrl(''), // Use the helper to get the base URL
     });
 
     api.interceptors.request.use(

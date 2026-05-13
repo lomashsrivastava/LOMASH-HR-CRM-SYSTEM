@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { getApiUrl } from '../config';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Onboarding = () => {
@@ -13,9 +14,9 @@ const Onboarding = () => {
 
     useEffect(() => {
         if (token) {
-            axios.get('http://localhost:4000/api/v1/onboarding', { headers: { Authorization: `Bearer ${token}` } })
+            axios.get(getApiUrl('/onboarding'), { headers: { Authorization: `Bearer ${token}` } })
                 .then(res => setOnboardings(res.data));
-            axios.get('http://localhost:4000/api/v1/candidates', { headers: { Authorization: `Bearer ${token}` } })
+            axios.get(getApiUrl('/candidates'), { headers: { Authorization: `Bearer ${token}` } })
                 .then(res => setCandidates(res.data));
         }
     }, [token]);
@@ -23,7 +24,7 @@ const Onboarding = () => {
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const { data } = await axios.post('http://localhost:4000/api/v1/onboarding', {
+            const { data } = await axios.post(getApiUrl('/onboarding'), {
                 candidateId: formData.candidateId,
                 tasks: [
                     { title: 'Sign Contract', assignee: 'HR', status: 'Pending' },
@@ -107,7 +108,7 @@ const Onboarding = () => {
                                             setOnboardings(updatedOnb);
 
                                             try {
-                                                await axios.put(`http://localhost:4000/api/v1/onboarding/${onb._id}/tasks/${i}`, { status: newStatus }, {
+                                                await axios.put(getApiUrl(`/onboarding/${onb._id}/tasks/${i}`), { status: newStatus }, {
                                                     headers: { Authorization: `Bearer ${token}` }
                                                 });
                                             } catch (error) {
